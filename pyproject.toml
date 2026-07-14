@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slugcatpet"
+version = "0.1.1"
+description = "Slugcat desktop pet for Windows: Rain World slugcat companions, bilingual (zh/en)."
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "lingxiaojun", email = "ljunwen49@gmail.com" },
+]
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Win32 (MS Windows)",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Programming Language :: Python :: 3",
+    "Topic :: Games/Entertainment",
+]
+dependencies = [
+    "PySide6>=6.10.0",
+    "UnityPy>=1.23.0",
+    "numpy>=2.3.0",
+    "Pillow>=12.0.0",
+]
+
+[project.urls]
+Repository = "https://github.com/lingxiaojun/slugcatpet"
+
+[project.gui-scripts]
+slugcatpet = "slugcatpet.main:main"
+
+[tool.setuptools.packages.find]
+include = ["slugcatpet*"]
+
+[tool.setuptools.package-data]
+slugcatpet = ["resources/icons/*.svg", "resources/layouts/*.json"]

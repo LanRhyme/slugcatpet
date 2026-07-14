@@ -1,0 +1,113 @@
+{
+  "tint": [
+    255,
+    255,
+    115
+  ],
+  "canvas_scale": 2,
+  "canvas_w": 56,
+  "canvas_h": 70,
+  "parts": [
+    {
+      "frame": "LegsA0",
+      "atlas": "base",
+      "x": 28,
+      "y": 42,
+      "z": 0,
+      "mirror": false,
+      "visible": true,
+      "scale": 1.0,
+      "tint": null,
+      "anchor": null,
+      "angle": 0.0
+    },
+    {
+      "frame": "HipsA",
+      "atlas": "base",
+      "x": 28,
+      "y": 31,
+      "z": 1,
+      "mirror": false,
+      "visible": true,
+      "scale": 1.0,
+      "tint": null,
+      "anchor": null,
+      "angle": 0.0
+    },
+    {
+      "frame": "BodyA",
+      "atlas": "base",
+      "x": 28,
+      "y": 25.0,
+      "z": 2,
+      "mirror": false,
+      "visible": true,
+      "scale": 1.0,
+      "tint": null,
+      "anchor": null,
+      "angle": 0.0
+    },
+    {
+      "frame": "PlayerArm5",
+      "atlas": "base",
+      "x": 11,
+      "y": 26,
+      "z": 3,
+      "mirror": true,
+      "visible": true,
+      "scale": 1.0,
+      "tint": null,
+      "anchor": [
+        1.0,
+        0.5
+      ],
+      "angle": 0.0
+    },
+    {
+      "frame": "PlayerArm5",
+      "atlas": "base",
+      "x": 45,
+      "y": 26,
+      "z": 4,
+      "mirror": false,
+      "visible": true,
+      "scale": 1.0,
+      "tint": null,
+      "anchor": [
+        1.0,
+        0.5
+      ],
+      "angle": 0.0
+    },
+    {
+      "frame": "HeadA0",
+      "atlas": "base",
+      "x": 28,
+      "y": 13,
+      "z": 5,
+      "mirror": false,
+      "visible": true,
+      "scale": 1.0,
+      "tint": null,
+      "anchor": null,
+      "angle": 0.0
+    },
+    {
+      "frame": "FaceB0",
+      "atlas": "base",
+      "x": 28,
+      "y": 17,
+      "z": 9,
+      "mirror": false,
+      "visible": true,
+      "scale": 1.0,
+      "tint": [
+        22,
+        30,
+        16
+      ],
+      "anchor": null,
+      "angle": 0.0
+    }
+  ]
+}
