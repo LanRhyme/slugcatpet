@@ -219,7 +219,8 @@ class PetUnit:
         if self.gills is not None:
             self.gills.update(b.chunk0.x, b.chunk0.y, b.chunk1.x, b.chunk1.y,
                               g.look_dir[0], g.look_dir[1],
-                              submerged=b.head_sub > 0.5)      # 头浸水鳞片阻尼
+                              submerged=b.head_sub > 0.5,
+                              flat_anchor=g.gills_flat)
         g.update_tongue_rope()
         self._tick_tail()
 

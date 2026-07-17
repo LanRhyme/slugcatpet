@@ -42,7 +42,8 @@ ARTIFICER_DEF = CatDef(
     personality=replace(DEFAULT_PERSONALITY, activity=0.75, stamina=1.1,
                         sociability=0.2, diet=DIET_CARNIVORE,
                         toy_pref={"pyro_romp": 1.4}),
-    tuning={"pyro_heat_cap": 5},   # = pyro.WARN_AT，AI 永不至眩晕/自爆
+    tuning={"pyro_heat_cap": 5,    # = pyro.WARN_AT，AI 永不至眩晕/自爆
+            "temper_maul_gate": -0.50},   # ≤此值光标拂过可触发爆跳劫持
     fsm_mount=_fsm_mount,
     wip=False,
 )

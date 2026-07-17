@@ -77,13 +77,14 @@ _WATER_BLOCKED = frozenset(("RelocateToWall", "TongueClimb", "CeilingHang", "Swi
                             "Dragged", "Dead", "Stunned", "Ascension", "DodgeKill"))
 # 取果触发不打断的态
 _FETCH_NEVER = frozenset(("FetchFruit", "Ascension", "Dragged", "Dead", "WakeSequence",
-                          "Stunned", "DodgeKill", "SeekWarmth", "Swimming"))
+                          "Stunned", "DodgeKill", "SeekWarmth", "Swimming",
+                          "PyroMaul", "RivSnatch"))
 # play 态接管取果需果在舌头射程内
 _FETCH_PLAY = frozenset(("PoleClimb", "HPole", "CeilingHang"))
 
 
 _EN_VIGOROUS = frozenset(("TongueClimb", "PoleClimb", "HPole", "CeilingHang", "DodgeKill", "Swimming",
-                          "PyroRomp", "RivFlip"))
+                          "PyroRomp", "RivFlip", "PyroMaul", "RivSnatch"))
 _EN_LIGHT = frozenset(("RelocateToWall", "PostThrowWander", "FetchFruit", "AngryStone",
                        "WakeSequence", "CursorLick", "SeekWarmth", "SeekHPole", "MakeWay"))
 _EN_REST = frozenset(("LieDown", "Sleep"))

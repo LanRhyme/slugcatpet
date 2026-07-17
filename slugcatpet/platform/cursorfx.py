@@ -79,10 +79,10 @@ else:
 
 
 class CursorHijack:
-    """光标抛物线落体 + 底边锁定 5s。坐标 = Win32 物理像素（屏幕全局，已由 window 按 dpr 换算）。"""
+    """光标劫持。坐标 = Win32 物理像素（屏幕全局，已由 window 按 dpr 换算）。"""
 
     def __init__(self, dev_x, dev_y, screen_w, screen_h, screen_x=0, screen_y=0, mock=False,
-                 lock_ticks=T_CURSOR_LOCK):
+                 lock_ticks=T_CURSOR_LOCK, mode="fall", watchdog_max=WATCHDOG_MAX):
         self.mock = mock or not _IS_WIN
         self.x = float(dev_x)
         self.y = float(dev_y)
@@ -92,22 +92,28 @@ class CursorHijack:
         self.x0 = screen_x
         self.y0 = screen_y
         self.bottom = screen_y + screen_h - 2
-        self.phase = "fall"         # fall → lock → done
+        self.mode = mode
+        self.phase = "hold" if mode == "hold" else "fall"   # fall → lock → done；hold → done
         self.lock_ticks = int(lock_ticks)
         self.lock_t = 0
         self.watchdog = 0
+        self.watchdog_max = int(watchdog_max)
         self.use_setpos = False     # ClipCursor 失败降级标志
         self.active = True
         _ACTIVE.append(self)
         if not self.mock:
             _set_busy_cursor()
 
+    def hold_at(self, dev_x, dev_y):
+        self.x = float(dev_x)
+        self.y = float(dev_y)
+
     def update(self) -> bool:
         """推进一帧。返回是否仍活动。"""
         if not self.active:
             return False
         self.watchdog += 1
-        if self.watchdog >= WATCHDOG_MAX:
+        if self.watchdog >= self.watchdog_max:
             self.release()
             return False
 

@@ -824,18 +824,24 @@ class PetWindow(EffectsMixin, ItemInteractionMixin, QWidget):
             hud.deleteLater()
 
     def _dirty_rect(self):
-        """计算全部在场物体的脏矩形。"""
+        """计算全部在场物体的脏矩形，绘制取 last..cur 插值。"""
         xs, ys = [], []
+
+        def put(x, y, lx, ly):
+            xs.append(x); ys.append(y)
+            xs.append(lx); ys.append(ly)
+
         for pet in self.pets:
             b, g = pet.body, pet.gfx
             for c in (b.chunk0, b.chunk1):
-                xs.append(c.x); ys.append(c.y)
-            xs.append(g.head.x); ys.append(g.head.y)
+                put(c.x, c.y, c.last_x, c.last_y)
+            put(g.head.x, g.head.y, g.head.lx, g.head.ly)
             for h in g.hands:
-                xs.append(h.x); ys.append(h.y)
+                put(h.x, h.y, h.lx, h.ly)
             xs.append(2.0 * b.chunk1.x - g.head.x)       # 镜像极值
+            xs.append(2.0 * b.chunk1.last_x - g.head.lx)
             for s_ in pet.tail.segs:
-                xs.append(s_.x); ys.append(s_.y)
+                put(s_.x, s_.y, s_.lx, s_.ly)
             if pet.tongue is not None:
                 for px, py in pet.tongue.positions():
                     xs.append(px); ys.append(py)
@@ -845,27 +851,27 @@ class PetWindow(EffectsMixin, ItemInteractionMixin, QWidget):
                     xs.append(px); ys.append(py)
         for f in self.fruits:
             r = f.rad
-            xs.append(f.x - r); xs.append(f.x + r)
-            ys.append(f.y - r); ys.append(f.y + r)
+            put(f.x - r, f.y - r, f.last_x - r, f.last_y - r)
+            put(f.x + r, f.y + r, f.last_x + r, f.last_y + r)
             if f.stalk is not None:
                 for px, py in f.stalk.points():
                     xs.append(px); ys.append(py)
         for st in self.stones:
             r = st.rad
-            xs.append(st.x - r); xs.append(st.x + r)
-            ys.append(st.y - r); ys.append(st.y + r)
+            put(st.x - r, st.y - r, st.last_x - r, st.last_y - r)
+            put(st.x + r, st.y + r, st.last_x + r, st.last_y + r)
         for m in self.slimemolds:
             gr = 70.0
-            xs.append(m.x - gr); xs.append(m.x + gr)
-            ys.append(m.y - gr); ys.append(m.y + gr)
+            put(m.x - gr, m.y - gr, m.last_x - gr, m.last_y - gr)
+            put(m.x + gr, m.y + gr, m.last_x + gr, m.last_y + gr)
             for t in m.tendrils:
                 xs.append(t[0]); ys.append(t[1])
         for b in self.batflies:
             wr = 40.0                      # 翅展 pad
-            xs.append(b.x - wr); xs.append(b.x + wr)
-            ys.append(b.y - wr); ys.append(b.y + wr)
-            xs.append(b.lower_x - wr); xs.append(b.lower_x + wr)
-            ys.append(b.lower_y - wr); ys.append(b.lower_y + wr)
+            put(b.x - wr, b.y - wr, b.last_x - wr, b.last_y - wr)
+            put(b.x + wr, b.y + wr, b.last_x + wr, b.last_y + wr)
+            put(b.lower_x - wr, b.lower_y - wr, b.last_lower_x - wr, b.last_lower_y - wr)
+            put(b.lower_x + wr, b.lower_y + wr, b.last_lower_x + wr, b.last_lower_y + wr)
         for pl in self.poles:
             xs.append(pl.ax); xs.append(pl.bx)
             ys.append(pl.ay); ys.append(pl.by)

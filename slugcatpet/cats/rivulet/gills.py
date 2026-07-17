@@ -105,7 +105,8 @@ class Gills:
                 self.scales_y.append(_GILL_ROW_ANCHOR_Y[row])
                 self.backwards.append(back)
 
-    def update(self, head_x, head_y, hip_x, hip_y, look_x, look_y, submerged=False):
+    def update(self, head_x, head_y, hip_x, hip_y, look_x, look_y, submerged=False,
+               flat_anchor=0.0):
         """驱动一帧；submerged→水下阻尼。"""
         hx0, hy0 = head_x, -head_y
         hipx, hipy = hip_x, -hip_y
@@ -119,14 +120,17 @@ class Gills:
         pull_denom = _lerp(5.0, 1.5, rigor)
         vel_damp = _lerp(1.0, 0.8, rigor)
         # 用体轴代替世界上向：桌宠会横身/反重力
+        hip_d = math.hypot(hx0 - hipx, hy0 - hipy)
+        hipx, hipy = _lerp_vec(hipx, hipy, hx0, hy0 - hip_d, flat_anchor)
         bux, buy = _dir_vec(hipx, hipy, hx0, hy0)
+        ovx, ovy = buy, -bux
         for i in range(n):
             sc = self.scales[i]
             posx, posy = hx0, hy0
             slot = i % half
-            side = 5.0 if i >= half else -5.0          # 右半+5/左半-5，对应体轴垂向偏移
-            posx += buy * side                          # 体轴垂向=(buy,-bux)
-            posy += -bux * side
+            side = 5.0 if i >= half else -5.0          # 右半+5/左半-5
+            posx += ovx * side
+            posy += ovy * side
             base = slot * gap_deg - fan_deg / 2.0     # 槽内均布，居中 ±45°
             outx, outy = _rotate_vec_deg(bux, buy, base + 90.0)
             fanx, fany = _rotate_vec_deg(bux, buy, base)

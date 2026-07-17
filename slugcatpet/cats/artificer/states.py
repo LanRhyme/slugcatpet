@@ -14,11 +14,13 @@ ROMP_TIMEOUT = 1200      # tick，仿 T_HPOLE_TIMEOUT 量级
 
 
 def mount(fsm):
-    """按 caps.pyro 挂载燃料 ticker + PyroRomp。"""
+    """按 caps.pyro 挂载燃料 ticker + PyroRomp + PyroMaul。"""
     if fsm.win.cat.caps.pyro:
         pyro.ensure(fsm.body)
         fsm.register_ticker(lambda: pyro.tick_fuel(fsm.win, fsm.body))
         _mount_pyroromp(fsm)
+        from .snatch import mount_maul
+        mount_maul(fsm)
 
 
 def _mount_pyroromp(fsm):

@@ -13,16 +13,36 @@ class EffectsMixin:
         life = 8.0 if flash else 12.0
         self.shockwaves.append([x, y, 0.0, float(maxr), life, life, flash])
 
+    def _cursor_to_device(self, logical_x, logical_y):
+        dpr = self.devicePixelRatioF()
+        return ((self._area.x() + logical_x * self._scale) * dpr,
+                (self._area.y() + logical_y * self._scale) * dpr)
+
     def start_cursor_hijack(self, logical_x, logical_y, lock_ticks=None):
         from ..platform.cursorfx import CursorHijack
 
         dpr = self.devicePixelRatioF()
-        dev_x = (self._area.x() + logical_x * self._scale) * dpr
-        dev_y = (self._area.y() + logical_y * self._scale) * dpr
+        dev_x, dev_y = self._cursor_to_device(logical_x, logical_y)
         kw = {} if lock_ticks is None else {"lock_ticks": lock_ticks}
         self.cursor_hijack = CursorHijack(
             dev_x, dev_y, self._area.width() * dpr, self._area.height() * dpr,
             self._area.x() * dpr, self._area.y() * dpr, **kw)
+
+    def start_cursor_hold(self, logical_x, logical_y, max_ticks):
+        from ..platform.cursorfx import CursorHijack
+
+        dpr = self.devicePixelRatioF()
+        dev_x, dev_y = self._cursor_to_device(logical_x, logical_y)
+        self.cursor_hijack = CursorHijack(
+            dev_x, dev_y, self._area.width() * dpr, self._area.height() * dpr,
+            self._area.x() * dpr, self._area.y() * dpr,
+            mode="hold", watchdog_max=max_ticks)
+        return self.cursor_hijack
+
+    def move_cursor_hold(self, logical_x, logical_y):
+        hj = self.cursor_hijack
+        if hj is not None and hj.mode == "hold" and hj.active:
+            hj.hold_at(*self._cursor_to_device(logical_x, logical_y))
 
     def stop_cursor_hijack(self):
         if self.cursor_hijack is not None:

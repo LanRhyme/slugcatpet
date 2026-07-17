@@ -17,9 +17,11 @@ AIM_BAND = GRIP_DIST - 4.0   # 贴杆瞄准带，留 sim 残差余量
 
 
 def mount(fsm):
-    """按 caps.acrobat 挂载 RivFlip。"""
+    """按 caps.acrobat 挂载 RivFlip + RivSnatch。"""
     if fsm.win.cat.caps.acrobat:
         _mount_rivflip(fsm)
+        from .snatch import mount_snatch
+        mount_snatch(fsm)
 
 
 def _walk_band(fsm):

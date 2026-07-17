@@ -36,6 +36,7 @@ CRAWL_QUICKNESS = 0.7
 _NO_ARM_AIM = {"l": None, "r": None}
 
 SLEEP_CURL_RATE = 0.01 * K_VEL
+GILLS_FLAT_RATE = 0.08 * K_VEL
 BLINK_MIN, BLINK_MAX = 2, 1800   # 自驱 blink 间隔（tick）
 
 # 寒冷发白
@@ -221,6 +222,7 @@ class SlugcatGraphics(GraphicsDrawMixin):
         self.look_dir = (0.0, 0.0)
         self.sleeping = False
         self.sleep_curl = 0.0
+        self.gills_flat = 0.0          # 1=鳃锚退回世界水平（趴/睡）
         self.dead = False
         self.stunned = False           # 晕脸 + 头帧0耷拉
         self.blink = 0
@@ -367,6 +369,12 @@ class SlugcatGraphics(GraphicsDrawMixin):
             self.sleep_curl = min(target, self.sleep_curl + SLEEP_CURL_RATE)
         elif self.sleep_curl > target:
             self.sleep_curl = max(target, self.sleep_curl - SLEEP_CURL_RATE * 1.5)
+
+        gf = 1.0 if (self.sleeping or b.bodyMode == "Crawl") else 0.0
+        if self.gills_flat < gf:
+            self.gills_flat = min(gf, self.gills_flat + GILLS_FLAT_RATE)
+        elif self.gills_flat > gf:
+            self.gills_flat = max(gf, self.gills_flat - GILLS_FLAT_RATE)
         self._apply_sleep_curl_pose()
 
         self._update_face_pose()
