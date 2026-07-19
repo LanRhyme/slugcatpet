@@ -107,7 +107,7 @@ class GTK3Bridge:
             for pet in self.pet.pets:
                 x = pet.body.chunk0.x * scale
                 y = pet.body.chunk0.y * scale
-                r = 50 * scale # safe radius to capture body clicks without blocking too much screen
+                r = 30 * scale # safe radius to capture body clicks without blocking too much screen
                 rect = cairo.RectangleInt(int(x - r), int(y - r), int(r * 2), int(r * 2))
                 region.union(cairo.Region(rect))
                 
@@ -115,7 +115,7 @@ class GTK3Bridge:
             for item in items:
                 x = item.x * scale
                 y = item.y * scale
-                r = 25 * scale
+                r = 15 * scale
                 rect = cairo.RectangleInt(int(x - r), int(y - r), int(r * 2), int(r * 2))
                 region.union(cairo.Region(rect))
                 
