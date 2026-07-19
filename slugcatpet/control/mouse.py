@@ -149,61 +149,13 @@ if _IS_WIN:
 
 def set_passthrough(hwnd: int, passthrough: bool) -> None:
     """动态切换鼠标穿透；True 穿透、False 接收。"""
-    if _IS_WIN:
-        if not hwnd:
-            return
-        ex = _GetWindowLongPtr(hwnd, _GWL_EXSTYLE)
-        if ex is None:
-            return
-        ex = int(ex)
-        new = (ex | _WS_EX_TRANSPARENT) if passthrough else (ex & ~_WS_EX_TRANSPARENT)
-        new |= _WS_EX_LAYERED
-        if new != ex:
-            _SetWindowLongPtr(hwnd, _GWL_EXSTYLE, ctypes.c_void_p(new) if _IS_WIN else new)
-    elif sys.platform.startswith("linux"):
-        _set_passthrough_x11(hwnd, passthrough)
-
-_x11_display = None
-_xfixes = None
-_xlib = None
-_x11_init_done = False
-
-def _init_x11():
-    global _x11_display, _xfixes, _xlib, _x11_init_done
-    if _x11_init_done:
+    if not _IS_WIN or not hwnd:
         return
-    _x11_init_done = True
-    import ctypes
-    try:
-        _xlib = ctypes.cdll.LoadLibrary('libX11.so.6')
-        _xfixes = ctypes.cdll.LoadLibrary('libXfixes.so.3')
-        
-        _xlib.XOpenDisplay.argtypes = [ctypes.c_char_p]
-        _xlib.XOpenDisplay.restype = ctypes.c_void_p
-        
-        _xfixes.XFixesCreateRegion.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int]
-        _xfixes.XFixesCreateRegion.restype = ctypes.c_ulong
-        
-        _xfixes.XFixesSetWindowShapeRegion.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_ulong]
-        
-        _xfixes.XFixesDestroyRegion.argtypes = [ctypes.c_void_p, ctypes.c_ulong]
-        
-        _xlib.XFlush.argtypes = [ctypes.c_void_p]
-        
-        _x11_display = _xlib.XOpenDisplay(None)
-    except Exception as e:
-        print("X11 init failed", e)
-
-def _set_passthrough_x11(hwnd: int, passthrough: bool):
-    _init_x11()
-    if not _x11_display or not _xfixes or not _xlib:
+    ex = _GetWindowLongPtr(hwnd, _GWL_EXSTYLE)
+    if ex is None:
         return
-    import ctypes
-    ShapeInput = 2
-    if passthrough:
-        region = _xfixes.XFixesCreateRegion(_x11_display, None, 0)
-        _xfixes.XFixesSetWindowShapeRegion(_x11_display, ctypes.c_ulong(hwnd), ShapeInput, 0, 0, region)
-        _xfixes.XFixesDestroyRegion(_x11_display, region)
-    else:
-        _xfixes.XFixesSetWindowShapeRegion(_x11_display, ctypes.c_ulong(hwnd), ShapeInput, 0, 0, 0)
-    _xlib.XFlush(_x11_display)
+    ex = int(ex)
+    new = (ex | _WS_EX_TRANSPARENT) if passthrough else (ex & ~_WS_EX_TRANSPARENT)
+    new |= _WS_EX_LAYERED
+    if new != ex:
+        _SetWindowLongPtr(hwnd, _GWL_EXSTYLE, ctypes.c_void_p(new) if _IS_WIN else new)

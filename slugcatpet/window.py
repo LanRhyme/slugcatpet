@@ -257,8 +257,6 @@ class PetWindow(EffectsMixin, ItemInteractionMixin, QWidget):
     def _update_passthrough(self):
         if self.debug:
             return
-        if self._place_mode:
-            return        # 放置模式接管点击，勿翻转
         from .control.mouse import is_over
         cur = self.cursor_logical()
         active = any(pet.behavior is not None and pet.behavior.grab.active for pet in self.pets)
@@ -274,14 +272,44 @@ class PetWindow(EffectsMixin, ItemInteractionMixin, QWidget):
         over_slime = self._slimemold_at(cur) is not None
         dragging_batfly = self._dragged_batfly is not None
         over_batfly = self._batfly_at(cur) is not None
+        
         want = not (active or dragging_fruit or over_fruit or dragging_stone or over_stone
                     or dragging_slime or over_slime or dragging_batfly or over_batfly or over_body)
+        
+        if self._place_mode:
+            want = False
         if want != self._passthrough:
             self._passthrough = want
             if not self._hwnd:
                 self._hwnd = int(self.winId())
             from .control.mouse import set_passthrough
             set_passthrough(self._hwnd, want)
+            
+        import sys
+        if sys.platform.startswith("linux"):
+            if not want:
+                if getattr(self, '_linux_masked', False):
+                    self.clearMask()
+                    self._linux_masked = False
+            else:
+                from PySide6.QtGui import QRegion
+                from PySide6.QtCore import QRect
+                region = QRegion()
+                for p in self.pets:
+                    r = p.body.rect
+                    r.adjust(-30, -30, 30, 30)
+                    region = region.united(QRegion(r.toRect()))
+                for arr in (self.fruits, self.stones, self.slimemolds, self.batflies):
+                    for item in arr:
+                        r = getattr(item, "rad", 15)
+                        rect = QRect(int(item.x - r - 20), int(item.y - r - 20), int(r*2 + 40), int(r*2 + 40))
+                        region = region.united(QRegion(rect))
+                
+                # Combine with previous region to clear Wayland ghosting trails
+                mask_region = region.united(self._prev_mask_region) if hasattr(self, '_prev_mask_region') else region
+                self.setMask(mask_region)
+                self._prev_mask_region = region
+                self._linux_masked = True
 
     # ── 帧循环 ──
     _PHYS_DT = 1.0 / 40.0

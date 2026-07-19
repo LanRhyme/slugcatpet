@@ -332,9 +332,11 @@ class TabBar(QWidget):
         self.expanded = False
         self._drag = None
 
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint
-                            | Qt.WindowType.WindowStaysOnTopHint
-                            | Qt.WindowType.Tool)
+        flags = (Qt.WindowType.FramelessWindowHint
+                 | Qt.WindowType.WindowStaysOnTopHint
+                 | Qt.WindowType.Tool)
+        self.setWindowFlags(flags)
+        self.setWindowTitle("slugcatpet")
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
 
