@@ -346,7 +346,6 @@ class TabBar(QWidget):
         self._y = self.params.get("tab_y", screen.y() + (screen.height() - EXPANDED_H) // 2)
 
         self._build()
-        self.setFixedSize(self.sizeHint())
         self._apply_collapsed()
 
     def _build(self):
