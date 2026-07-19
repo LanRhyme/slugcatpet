@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Slugcat Pet
+Comment=Rain World Desktop Pet
+Exec=/home/lanrhyme/Projects/slugcatpet/start.sh
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=Game;Amusement;

@@ -334,7 +334,7 @@ class TabBar(QWidget):
 
         flags = (Qt.WindowType.FramelessWindowHint
                  | Qt.WindowType.WindowStaysOnTopHint
-                 | Qt.WindowType.Tool)
+                 | Qt.WindowType.Dialog)
         self.setWindowFlags(flags)
         self.setWindowTitle("slugcatpet")
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
@@ -346,6 +346,7 @@ class TabBar(QWidget):
         self._y = self.params.get("tab_y", screen.y() + (screen.height() - EXPANDED_H) // 2)
 
         self._build()
+        self.setFixedSize(self.sizeHint())
         self._apply_collapsed()
 
     def _build(self):

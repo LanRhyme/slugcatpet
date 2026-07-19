@@ -25,11 +25,12 @@ class HudPanel(QWidget):
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint
                             | Qt.WindowType.WindowStaysOnTopHint
-                            | Qt.WindowType.Tool)
+                            | Qt.WindowType.Dialog)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
 
         self._build()
+        self.setFixedSize(self.sizeHint())
         self._place()
 
         self._timer = QTimer(self)

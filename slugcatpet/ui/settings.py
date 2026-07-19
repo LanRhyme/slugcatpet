@@ -40,7 +40,7 @@ class SettingsWindow(QWidget):
         self._hud = hud
         self._write_state = write_state
         window._settings_panel = self    # 供 window 反向同步世界态
-        self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint)
         self.setWindowTitle(t("settings_title"))
         self.setStyleSheet(_QSS)
         self.setMinimumWidth(280)

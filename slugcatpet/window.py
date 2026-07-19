@@ -36,10 +36,14 @@ SHAKE_EPS = 0.05
 def compute_geometry(area: QRect, geo: QRect, canvas_scale: int) -> dict:
     """算地面/窗口几何。"""
     s = canvas_scale or 1
-    avail_below = max(0, (geo.y() + geo.height()) - (area.y() + area.height()))
+    # Fix PySide6 Wayland availableGeometry bug where width/height don't subtract the offset
+    true_aw = min(area.width(), geo.width() - (area.x() - geo.x()))
+    true_ah = min(area.height(), geo.height() - (area.y() - geo.y()))
+    
+    avail_below = max(0, (geo.y() + geo.height()) - (area.y() + true_ah))
     inset_dev = avail_below if avail_below > 0 else int(round(GROUND_INSET * s))
-    return {"WL": area.width() / s, "HL": area.height() / s, "ground_inset": inset_dev,
-            "win_w": area.width(), "win_h": area.height() + inset_dev}
+    return {"WL": true_aw / s, "HL": true_ah / s, "ground_inset": inset_dev,
+            "win_w": true_aw, "win_h": true_ah + inset_dev}
 
 
 def _clamp_chunk_to_bounds(c, WL, HL):
@@ -84,7 +88,6 @@ class PetWindow(EffectsMixin, ItemInteractionMixin, QWidget):
                  | Qt.WindowType.Tool)
         self.setWindowFlags(flags)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
-        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, not self.debug)
         if self.debug:
             self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, False)
             self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -360,8 +363,7 @@ class PetWindow(EffectsMixin, ItemInteractionMixin, QWidget):
         self._last_ms = now
         if dt <= 0.0:
             return
-        if not self.isVisible():
-            return
+        pass
         self._update_passthrough()
         self._advance(min(dt, self._MAX_DT))
         region = self._update_region()
@@ -973,9 +975,8 @@ class PetWindow(EffectsMixin, ItemInteractionMixin, QWidget):
                  tuning.BUBBLE_RGBA, ax=0.5, ay=0.5)
         p.restore()
 
-    def paintEvent(self, _):
+    def customPaint(self, p):
         # 图层序：果绳/烟 → 猫身 → 杆/手 → 果石黏菌蝠 → 水 → 灯 → 特效 → 雪
-        p = QPainter(self)
         try:
             p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, False)
             p.scale(self._scale, self._scale)

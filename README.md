@@ -1,49 +1,52 @@
-<!-- 运行截图 -->
+# slugcatpet-wayland
 
-Windows 桌面宠物：让 Rain World 的蛞蝓猫住在你的屏幕上。
+Linux Wayland 桌面宠物，让 Rain World 的蛞蝓猫住在你的屏幕上
+
+本项目是基于 PySide6 和 GTK3 Layer Shell 的 Wayland 移植版本
+专为 Niri 等现代 Wayland 混成器优化了渲染和交互逻辑，支持透明穿透和物理交互
 
 ## 运行要求
 
-- Windows 10 / 11
+- Linux (Wayland 混成器环境，例如 Niri, Sway, Hyprland)
 - Python 3.10+
-- 初始化时需要已下载 Rain World，需要包含 Downpour (More Slugcats) DLC。
+- 依赖系统包 `gtk-layer-shell`
+- 初始化时需要已下载 Rain World，包含 Downpour (More Slugcats) DLC
 
-## 安装与运行
+## 环境准备与安装
 
-```powershell
-pip install PySide6 UnityPy numpy Pillow
-python run_slugcatpet.py
+推荐使用虚拟环境安装依赖
+
+```bash
+# Arch Linux 依赖安装
+sudo pacman -S gtk-layer-shell
+
+# Python 依赖安装
+pip install PySide6 UnityPy numpy Pillow PyGObject pycairo
 ```
 
-首次启动会引导你选择本机的 Rain World 安装目录，从中一次性提取精灵图集到 `~/.slugcatpet/assets`，仅存放在你本机、仅供本程序使用。
+## 启动方式
+
+直接运行优化后的启动脚本
+
+```bash
+./start.sh
+```
+
+或将生成的 `slugcatpet-wayland.desktop` 移动到 `~/.local/share/applications/` 后，通过桌面启动器运行
+
+首次启动会引导你选择本机的 Rain World 安装目录，从中提取精灵图集到 `~/.slugcatpet/assets`
+提取的素材仅存放在本机，不会包含在仓库中
+
+## 核心特性
+
+- 基于 Wayland Layer Shell 协议的全局悬浮层
+- 动态坐标计算，自适应状态栏偏移和混成器布局
+- 分离式渲染架构 (PySide6 逻辑运算，GTK3 绘制透明窗口)
+- 浮动控制面板适配，支持托盘图标快速控制显隐
+- 修复了圣徒攀爬等逻辑在 Wayland 下的出界裁切问题
 
 ## 素材与版权说明
 
-- 本仓库不包含任何 Rain World 游戏素材。全部游戏图像在你本机、从你自己的正版安装中提取。
-- 此项目为粉丝项目，Rain World 及相关名称、美术均归其权利人所有。
-- 本仓库代码以 MIT 许可发布（见 [LICENSE](LICENSE)）；该许可仅覆盖本仓库代码，不授予任何游戏素材相关权利。
-
----
-
-A Windows desktop pet that puts Rain World's slugcats on your screen.
-
-## Requirements
-
-- Windows 10 / 11
-- Python 3.10+
-- Rain World installed, including the Downpour (More Slugcats) DLC.
-
-## Install and run
-
-```powershell
-pip install PySide6 UnityPy numpy Pillow
-python run_slugcatpet.py
-```
-
-On first launch you pick your Rain World install folder. Sprite atlases are extracted once to `~/.slugcatpet/assets`, kept on your machine and used only by this program.
-
-## Assets and copyright
-
-- This repository contains no Rain World assets. All game images are extracted on your machine from your own copy.
-- This is a fan project. Rain World and all related names and artwork belong to their respective owners.
-- The code is released under the MIT license (see [LICENSE](LICENSE)). It covers this repository's code only and grants no rights to any game assets.
+- 本仓库不包含任何 Rain World 游戏素材，全部游戏图像需从用户本机的合法安装中提取
+- 此项目为粉丝衍生项目，Rain World 及相关名称、美术资产均归其原始权利人所有
+- 本仓库代码以 MIT 许可发布，该许可仅覆盖代码部分，不授予任何游戏素材的相关权利

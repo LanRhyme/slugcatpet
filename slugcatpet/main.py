@@ -132,14 +132,14 @@ def main():
         return
 
     pet = PetWindow(params=params)
-    pet.show()
+    from .gtk3_bridge import GTK3Bridge
+    app._gtk3_bridge = GTK3Bridge(pet)
 
     hud = HudPanel(pet, params)
-    if params.get("hud_visible"):
-        hud.toggle_visible()
+    # 不在启动时显示面板，由用户手动从托盘打开
 
     tab = TabBar(pet, app, params)
-    tab.show()
+    tab.hide()
 
     def _write_state():
         """序列化状态并写盘。"""
@@ -163,8 +163,7 @@ def main():
     pet._open_settings_cb = settings.open  # 设置入口共用
     app._settings = settings             # 保持引用
 
-    if params.get("tab_expanded", True):
-        tab.toggle()
+    # tab.toggle() disabled by default
 
     tray = QSystemTrayIcon(_tray_icon())
     tray.setToolTip(t("app_title"))
@@ -173,18 +172,30 @@ def main():
     act_settings.triggered.connect(settings.open)
     act_hud = QAction(t("tray_hud"))
     act_hud.triggered.connect(hud.toggle_visible)
+    act_tab = QAction("显示/隐藏侧边栏 (Toggle TabBar)")
+    act_tab.triggered.connect(lambda: tab.setVisible(not tab.isVisible()))
+    act_pet = QAction("显示/隐藏桌宠 (Toggle Pet)")
+    def toggle_pet():
+        win = app._gtk3_bridge.gtk_win
+        if win.get_visible():
+            win.hide()
+        else:
+            win.show_all()
+    act_pet.triggered.connect(toggle_pet)
     act_quit = QAction(t("tray_quit"))
     act_quit.triggered.connect(app.quit)
     act_abort = QAction(t("tray_abort"))
     act_abort.triggered.connect(cursorfx.abort_all)
+    menu.addAction(act_pet)
     menu.addAction(act_settings)
     menu.addAction(act_hud)
+    menu.addAction(act_tab)
     menu.addAction(act_abort)
     menu.addSeparator()
     menu.addAction(act_quit)
     tray.setContextMenu(menu)
     tray.show()
-    tray.showMessage(t("app_title"), t("tray_started"),
+    tray.showMessage(t("app_title"), "已启动，请在系统托盘右键菜单中呼出面板。",
                      QSystemTrayIcon.MessageIcon.Information, 4000)
 
     si.on_secondary_attempt = lambda: tray.showMessage(     # 后启实例触发提示
@@ -192,10 +203,7 @@ def main():
         QSystemTrayIcon.MessageIcon.Information, 4000)
 
     hotkey = HotkeyFilter()
-    app.installNativeEventFilter(hotkey)
-    hotkey.register(HK_ABORT, MOD_CONTROL | MOD_ALT, VK_Q)
-    hotkey.register(HK_QUIT, MOD_CONTROL | MOD_ALT, VK_X)
-    hotkey.register(HK_HUD, MOD_CONTROL | MOD_ALT, VK_H)
+    # 快捷键已禁用
     pet._hotkey_filter = hotkey          # 放置模式临时挂/摘 Esc
 
     def _on_hotkey(hk_id):

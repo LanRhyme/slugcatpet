@@ -1,3 +1,5 @@
+
+
 """PyInstaller / 直接运行入口。"""
 from slugcatpet.main import main
 
