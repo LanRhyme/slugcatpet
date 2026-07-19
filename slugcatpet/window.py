@@ -296,9 +296,12 @@ class PetWindow(EffectsMixin, ItemInteractionMixin, QWidget):
                 from PySide6.QtCore import QRect
                 region = QRegion()
                 for p in self.pets:
-                    r = p.body.rect
-                    r.adjust(-30, -30, 30, 30)
-                    region = region.united(QRegion(r.toRect()))
+                    xs = [p.body.chunk0.x, p.body.chunk1.x, p.gfx.head.x]
+                    ys = [p.body.chunk0.y, p.body.chunk1.y, p.gfx.head.y]
+                    minx, maxx = int(min(xs)), int(max(xs))
+                    miny, maxy = int(min(ys)), int(max(ys))
+                    rect = QRect(minx - 40, miny - 40, maxx - minx + 80, maxy - miny + 80)
+                    region = region.united(QRegion(rect))
                 for arr in (self.fruits, self.stones, self.slimemolds, self.batflies):
                     for item in arr:
                         r = getattr(item, "rad", 15)
