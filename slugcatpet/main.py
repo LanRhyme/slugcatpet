@@ -11,6 +11,9 @@ from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
 from PySide6.QtGui import QIcon, QPixmap, QAction, QColor, QPainter
 from PySide6.QtCore import QTimer
 
+if sys.platform.startswith("linux"):
+    os.environ["QT_QPA_PLATFORM"] = "xcb"
+
 from .cats import default_def
 from .window import PetWindow
 from .ui.tabbar import TabBar
