@@ -41,8 +41,8 @@ RIVULET_DEF = CatDef(
     eye_color=(22, 30, 16),       # 脸暗色，非种族相关
     frames={
         "head": ("base", "HeadA"),        # 仅 Saint→HeadB，其余→HeadA
-        "face": ("base", "FaceB"),
-        "face_open": ("base", "FaceA"),
+        "face": ("base", "FaceA"),
+        "face_blink": ("base", "FaceB"),
         "legs_walk": ("base", "LegsA"),
         "legs_crawl": ("base", "LegsACrawling"),
         "legs_air": ("base", "LegsAAir0"),

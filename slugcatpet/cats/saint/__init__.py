@@ -22,8 +22,9 @@ SAINT_DEF = CatDef(
     eye_color=SAINT_EYE,
     frames={
         "head": ("msc", "HeadB"),
-        "face": ("base", "FaceB"),
-        "face_open": ("base", "FaceA"),
+        "face": ("base", "FaceB"),        # 闭眼
+        "face_blink": ("base", "FaceB"),
+        "face_open": ("base", "FaceA"),   # 超度睁眼
         "legs_walk": ("base", "LegsA"),
         "legs_crawl": ("base", "LegsACrawling"),
         "legs_air": ("base", "LegsAAir0"),

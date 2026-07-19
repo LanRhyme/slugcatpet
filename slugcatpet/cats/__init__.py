@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from .artificer import ARTIFICER_DEF
 from .base import CatDef
+from .hunter import HUNTER_DEF
 from .monk import MONK_DEF
 from .rivulet import RIVULET_DEF
 from .saint import SAINT_DEF
@@ -10,12 +11,13 @@ from .survivor import SURVIVOR_DEF
 
 DEFAULT_VARIANT = "saint"
 
-# 五个种族
+# 六个种族
 REGISTRY: dict[str, CatDef] = {
     "saint": SAINT_DEF,
     "rivulet": RIVULET_DEF,
     "survivor": SURVIVOR_DEF,
     "monk": MONK_DEF,
+    "hunter": HUNTER_DEF,
     "artificer": ARTIFICER_DEF,
 }
 

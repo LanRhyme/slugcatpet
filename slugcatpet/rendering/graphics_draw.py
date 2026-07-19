@@ -435,8 +435,9 @@ class GraphicsDrawMixin:
             self._asc_face_color = None
             face_color = self.EYE
 
-        face_b_frames = self._face_frames or [self.cat.frames["face"][1] + "0"]
-        face_a_frames = self._face_a_frames or face_b_frames
+        face_frames = self._face_frames or [self.cat.frames["face"][1] + "0"]
+        blink_frames = self._face_blink_frames or face_frames
+        face_a_frames = self._face_a_frames or face_frames
         n_max_a = len(face_a_frames) - 1
 
         if self.dead:
@@ -447,9 +448,12 @@ class GraphicsDrawMixin:
             idx = int(clampf(self._face_angle_index(), 0, 8))
             element = face_a_frames[min(idx, n_max_a)]
         else:
-            # sx<0 换 FaceD 族（仅工匠有）
-            frames = (self._face_mirror_frames
-                      if sx < 0.0 and self._face_mirror_frames else face_b_frames)
+            # 眨眼/睡觉→闭眼族；否则 sx<0 换 FaceD 族
+            if self.blink > 0 or self.sleep_curl > 0.0:
+                frames = blink_frames
+            else:
+                frames = (self._face_mirror_frames
+                          if sx < 0.0 and self._face_mirror_frames else face_frames)
             n_max = len(frames) - 1
             if self.sleep_curl > 0.0:
                 awake_idx = 7

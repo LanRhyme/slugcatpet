@@ -241,7 +241,9 @@ class SlugcatGraphics(GraphicsDrawMixin):
         fam = self.cat.frames
         self._head_frames = self._family_frames(*fam["head"])
         self._face_frames = self._family_frames(*fam["face"])
-        self._face_a_frames = self._family_frames(*fam["face_open"])
+        self._face_blink_frames = self._family_frames(*fam["face_blink"])
+        self._face_a_frames = (self._family_frames(*fam["face_open"])
+                               if "face_open" in fam else [])
         self._face_mirror_frames = (self._family_frames(*fam["face_mirror"])
                                     if "face_mirror" in fam else [])
         self._face_scar_frame = fam["face_scar"][1] if "face_scar" in fam else None

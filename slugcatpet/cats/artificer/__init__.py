@@ -20,9 +20,9 @@ ARTIFICER_DEF = CatDef(
     eye_color=(255, 255, 255),    # 强制白=正片叠底原图
     frames={
         "head": ("base", "HeadA"),           # 仅 Saint→HeadB，其余→HeadA
-        "face": ("msc", "FaceC"),            # 疤脸非眨眼族
+        "face": ("msc", "FaceC"),            # 疤脸
         "face_mirror": ("msc", "FaceD"),     # 镜像朝向→FaceD；疤不随翻转换边
-        "face_open": ("msc", "FaceC"),       # 睁眼槽仅超度用，工匠无超度占位同 FaceC
+        "face_blink": ("base", "FaceB"),
         "face_scar": ("base", "MushroomA"),  # 面罩疤复用蘑菇贴图元素
         "legs_walk": ("base", "LegsA"),
         "legs_crawl": ("base", "LegsACrawling"),

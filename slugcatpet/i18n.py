@@ -75,6 +75,7 @@ _STR = {
     "variant_rivulet":  {"zh": "溪流", "en": "Rivulet"},
     "variant_survivor": {"zh": "白猫", "en": "Survivor"},
     "variant_monk":     {"zh": "黄猫", "en": "Monk"},
+    "variant_hunter":   {"zh": "猎手", "en": "Hunter"},
     "variant_artificer": {"zh": "工匠", "en": "Artificer"},
     "variant_wip_note": {"zh": "（外观差异待后续）", "en": "(appearance differences TBD)"},
 
